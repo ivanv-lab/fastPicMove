@@ -38,4 +38,12 @@ public class Main {
         long timeElapsed=endTime-startTime;
         System.out.println("Затраченное время = "+timeElapsed);
     }
+
+    public static void moveFile(String [] files,String newPath){
+        for(String file:files){
+
+            String fileName=new File(file).getName();
+            String destinationName=
+        }
+    }
 }
