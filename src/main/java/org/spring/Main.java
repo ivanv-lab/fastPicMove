@@ -22,7 +22,17 @@ public class Main {
         String fileTo3="/src/main/resources/p13";
         String fileTo4="/src/main/resources/p14";
 
-        String[]files=
+        File f1=new File(fileFrom1);
+        File f2=new File(fileFrom2);
+        File f3=new File(fileFrom3);
+        File f4=new File(fileFrom4);
+
+        String[]files1=f1.list();
+        String[]files2=f2.list();
+        String[]files3=f3.list();
+        String[]files4=f4.list();
+
+
 
         long endTime=System.currentTimeMillis();
         long timeElapsed=endTime-startTime;
