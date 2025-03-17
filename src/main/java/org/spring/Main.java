@@ -3,9 +3,8 @@ package org.spring;
 import javax.naming.spi.DirectoryManager;
 import java.awt.desktop.FilesEvent;
 import java.io.File;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
+import java.io.IOException;
+import java.nio.file.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -32,7 +31,10 @@ public class Main {
         String[]files3=f3.list();
         String[]files4=f4.list();
 
-
+        moveFile(files1,fileTo1);
+        moveFile(files2,fileTo2);
+        moveFile(files3,fileTo3);
+        moveFile(files4,fileTo4);
 
         long endTime=System.currentTimeMillis();
         long timeElapsed=endTime-startTime;
@@ -43,7 +45,14 @@ public class Main {
         for(String file:files){
 
             String fileName=new File(file).getName();
-            String destinationName=
+            String destinationName=newPath+"/"+fileName;
+
+            try{
+                Files.move(Path.of(file), Path.of(destinationName));
+                System.out.println("Файл "+fileName+" успешно перемещен.");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
