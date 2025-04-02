@@ -21,14 +21,18 @@ public class Main {
         List<File> files=new ArrayList<>();
         List<String[]> strFiles=new ArrayList<>();
 
+
+
         filesFrom.add(from);
         filesTo.add(to);
-        filesFrom.forEach(f->files.add(new File(f)));
-        files.forEach(f->strFiles.add(f.list()));
 
-        moveFile(filesFrom.get(0),strFiles.get(0),filesTo.get(0));
 
-        deleteFile(strFiles.get(0),filesTo.get(0));
+//        filesFrom.forEach(f->files.add(new File(f)));
+//        files.forEach(f->strFiles.add(f.list()));
+//
+//        moveFile(filesFrom.get(0),strFiles.get(0),filesTo.get(0));
+//
+//        deleteFile(strFiles.get(0),filesTo.get(0));
 
         long endTime=System.currentTimeMillis();
         long timeElapsed=endTime-startTime;
