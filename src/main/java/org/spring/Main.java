@@ -19,8 +19,8 @@ public class Main {
 
         int n=8;
         for(int i=0;i<=n;i++){
-            filesFrom.add("src/main/resources/p0"+i);
-            filesTo.add("src/main/resources/p1"+i);
+            filesFrom.add("p0"+i);
+            filesTo.add("p1"+i);
             filesFrom.forEach(f->files.add(new File(f)));
             files.forEach(f->strFiles.add(f.list()));
 
