@@ -18,13 +18,13 @@ public class Main {
         List<String[]> strFiles=new ArrayList<>();
 
         int n=8;
-        for(int i=1;i<=n;i++){
+        for(int i=0;i<=n;i++){
             filesFrom.add("src/main/resources/p0"+i);
             filesTo.add("src/main/resources/p1"+i);
             filesFrom.forEach(f->files.add(new File(f)));
             files.forEach(f->strFiles.add(f.list()));
 
-            moveFile(filesFrom.get(i-1),strFiles.get(i-1),filesTo.get(i-1));
+            moveFile(filesFrom.get(i),strFiles.get(i),filesTo.get(i));
         }
 
         long endTime=System.currentTimeMillis();
