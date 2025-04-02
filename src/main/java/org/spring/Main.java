@@ -1,10 +1,10 @@
 package org.spring;
 
-import javax.naming.spi.DirectoryManager;
-import java.awt.desktop.FilesEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -12,30 +12,20 @@ public class Main {
         long startTime=System.currentTimeMillis();
         System.out.println("Hello world!");
 
-        String fileFrom1="src/main/resources/p01";
-        String fileFrom2="src/main/resources/p02";
-        String fileFrom3="src/main/resources/p03";
-        String fileFrom4="src/main/resources/p04";
+        List<String> filesFrom=new ArrayList<>();
+        List<String> filesTo=new ArrayList<>();
+        List<File> files=new ArrayList<>();
+        List<String[]> strFiles=new ArrayList<>();
 
-        String fileTo1="src/main/resources/p11";
-        String fileTo2="src/main/resources/p12";
-        String fileTo3="src/main/resources/p13";
-        String fileTo4="src/main/resources/p14";
+        int n=8;
+        for(int i=1;i<=n;i++){
+            filesFrom.add("src/main/resources/p0"+i);
+            filesTo.add("src/main/resources/p1"+i);
+            filesFrom.forEach(f->files.add(new File(f)));
+            files.forEach(f->strFiles.add(f.list()));
 
-        File f1=new File(fileFrom1);
-        File f2=new File(fileFrom2);
-        File f3=new File(fileFrom3);
-        File f4=new File(fileFrom4);
-
-        String[]files1=f1.list();
-        String[]files2=f2.list();
-        String[]files3=f3.list();
-        String[]files4=f4.list();
-
-        moveFile(fileFrom1,files1,fileTo1);
-        moveFile(fileFrom2,files2,fileTo2);
-        moveFile(fileFrom3,files3,fileTo3);
-        moveFile(fileFrom4,files4,fileTo4);
+            moveFile(filesFrom.get(i-1),strFiles.get(i-1),filesTo.get(i-1));
+        }
 
         long endTime=System.currentTimeMillis();
         long timeElapsed=endTime-startTime;
