@@ -41,7 +41,7 @@ public class Main {
     public static void moveFile(String fileFrom,String [] files,String newPath){
 
         for(String file:files){
-
+            new MyThread(file,newPath,fileFrom).start();
         }
 //        for(String file:files){
 //
@@ -57,10 +57,20 @@ public class Main {
 //        }
     }
 
-    class MyThread implements Thread{
+    class MyThread extends Thread {
+
+        String file;
+        String newPath;
+        String fileFrom;
+
+        public MyThread(String file,String newPath,String fileFrom){
+            this.file=file;
+            this.newPath=newPath;
+            this.fileFrom=fileFrom;
+        }
 
         @Override
-        public void run(String fileFrom,String file,String newPath){
+        public void run(){
             String fileName=new File(file).getName();
             String destinationName=newPath+"/"+fileName;
 
@@ -71,19 +81,6 @@ public class Main {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    static void moving(String fileFrom,String file,String newPath){
-
-        String fileName=new File(file).getName();
-        String destinationName=newPath+"/"+fileName;
-
-        try{
-                Files.copy(Path.of(fileFrom+"/"+file), Path.of(destinationName));
-                System.out.println("Файл "+fileName+" успешно скопирован.");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
     }
 
     public static void deleteFile(String []files,String newPath){
