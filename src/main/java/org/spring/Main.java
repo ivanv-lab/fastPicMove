@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadFactory;
 
 public class Main {
 
@@ -25,14 +26,12 @@ public class Main {
 
         filesFrom.add(from);
         filesTo.add(to);
+        filesFrom.forEach(f->files.add(new File(f)));
+        files.forEach(f->strFiles.add(f.list()));
 
+        moveFile(filesFrom.get(0),strFiles.get(0),filesTo.get(0));
 
-//        filesFrom.forEach(f->files.add(new File(f)));
-//        files.forEach(f->strFiles.add(f.list()));
-//
-//        moveFile(filesFrom.get(0),strFiles.get(0),filesTo.get(0));
-//
-//        deleteFile(strFiles.get(0),filesTo.get(0));
+        deleteFile(strFiles.get(0),filesTo.get(0));
 
         long endTime=System.currentTimeMillis();
         long timeElapsed=endTime-startTime;
@@ -40,18 +39,35 @@ public class Main {
     }
 
     public static void moveFile(String fileFrom,String [] files,String newPath){
+
         for(String file:files){
+            new Thread(moving(fileFrom,file,newPath)).run();
+        }
+//        for(String file:files){
+//
+//            String fileName=new File(file).getName();
+//            String destinationName=newPath+"/"+fileName;
+//
+//            try{
+//                Files.copy(Path.of(fileFrom+"/"+file), Path.of(destinationName));
+//                System.out.println("Файл "+fileName+" успешно скопирован.");
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+    }
 
-            String fileName=new File(file).getName();
-            String destinationName=newPath+"/"+fileName;
+    static void moving(String fileFrom,String file,String newPath){
 
-            try{
+        String fileName=new File(file).getName();
+        String destinationName=newPath+"/"+fileName;
+
+        try{
                 Files.copy(Path.of(fileFrom+"/"+file), Path.of(destinationName));
                 System.out.println("Файл "+fileName+" успешно скопирован.");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }
     }
 
     public static void deleteFile(String []files,String newPath){
