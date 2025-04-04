@@ -5,10 +5,11 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         long startTime=System.currentTimeMillis();
         System.out.println("Hello world!");
@@ -16,19 +17,11 @@ public class Main {
         String from="p1";
         String to="p0";
 
-        List<String> filesFrom=new ArrayList<>();
-        List<String> filesTo=new ArrayList<>();
-        List<File> files=new ArrayList<>();
-        List<String[]> strFiles=new ArrayList<>();
+        File filePath=new File(from);
+        String[] strFiles= filePath.list();
 
-        filesFrom.add(from);
-        filesTo.add(to);
-        filesFrom.forEach(f->files.add(new File(f)));
-        files.forEach(f->strFiles.add(f.list()));
-
-        moveFile(filesFrom.get(0),strFiles.get(0),filesTo.get(0));
-
-        deleteFile(strFiles.get(0),filesTo.get(0));
+        moveFile(from,strFiles,to);
+        deleteFile(strFiles,to);
 
         long endTime=System.currentTimeMillis();
         long timeElapsed=endTime-startTime;
