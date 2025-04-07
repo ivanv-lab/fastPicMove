@@ -34,12 +34,6 @@ public class Main {
 
         for (int i = 0; i < files.length; i += Math.min(4, files.length-i)) {
 
-//            List<String> part = new ArrayList<>();
-//            part.add(files[i]);
-//            part.add(files[i + 1]);
-//            part.add(files[i + 2]);
-//            part.add(files[i + 3]);
-
             String[] part=new String[Math.min(4, files.length)];
             for(int t=0;t<part.length;t++){
 
@@ -63,57 +57,13 @@ public class Main {
 
                 Thread thread1=new Thread(task);
                 thread1.start();
-
-//                Thread t = new Thread(() -> {
-//                    String fileName = part.get(finalJ);
-//                    String destinationName = newPath + "/" + fileName;
-//
-//                    try {
-//                        Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
-//                        System.out.println("Файл " + fileName + " успешно скопирован.");
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                });
-//                t.start();
             }
         }
-
-
-
-//        for (int i = 0; i < files.length - 4; i += Math.min(4, files.length)) {
-//            List<String> part = new ArrayList<>();
-//            part.add(files[i]);
-//            part.add(files[i + 1]);
-//            part.add(files[i + 2]);
-//            part.add(files[i + 3]);
-//
-//            for (int j = 0; j < part.size(); j++) {
-//
-//                int finalJ = j;
-//                Thread t = new Thread(() -> {
-//                    String fileName = part.get(finalJ);
-//                    String destinationName = newPath + "/" + fileName;
-//
-//                    try {
-//                        Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
-//                        System.out.println("Файл " + fileName + " успешно скопирован.");
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                });
-//                t.start();
-//            }
     }
 
     public static void deleteFile(String[] files, String newPath) throws InterruptedException {
 
         for (int i = 0; i < files.length - 4; i += Math.min(4, files.length)) {
-//            List<String> part = new ArrayList<>();
-//            part.add(files[i]);
-//            part.add(files[i + 1]);
-//            part.add(files[i + 2]);
-//            part.add(files[i + 3]);
 
             String[] part=new String[Math.min(4, files.length)];
             for(int t=0;t<part.length;t++){
@@ -138,19 +88,6 @@ public class Main {
 
                 Thread thread1=new Thread(task);
                 thread1.start();
-
-//                Thread t = new Thread(() -> {
-//                    String fileName = part.get(finalJ);
-//                    String destinationName = newPath + "/" + fileName;
-//
-//                    try {
-//                        Files.delete(Path.of(destinationName));
-//                        System.out.println("Файл " + fileName + " успешно удален.");
-//                    } catch (IOException e) {
-//                        System.out.println(e.getMessage());
-//                    }
-//                });
-//                t.start();
             }
         }
     }
