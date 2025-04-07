@@ -12,42 +12,42 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        long startTime=System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         System.out.println("Hello world!");
 
-        String from="p1";
-        String to="p0";
+        String from = "p1";
+        String to = "p0";
 
-        File filePath=new File(from);
-        String[] strFiles= filePath.list();
+        File filePath = new File(from);
+        String[] strFiles = filePath.list();
 
-        moveFile(from,strFiles,to);
-        deleteFile(strFiles,to);
+        moveFile(from, strFiles, to);
+        deleteFile(strFiles, to);
 
-        long endTime=System.currentTimeMillis();
-        long timeElapsed=endTime-startTime;
-        System.out.println("Затраченное время = "+timeElapsed);
+        long endTime = System.currentTimeMillis();
+        long timeElapsed = endTime - startTime;
+        System.out.println("Затраченное время = " + timeElapsed);
     }
 
-    public static void moveFile(String fileFrom,String [] files,String newPath){
+    public static void moveFile(String fileFrom, String[] files, String newPath) {
 
-        for(int i=0;i<files.length-4;i+=Math.min(4,files.length)) {
+        for (int i = 0; i < files.length - 4; i += Math.min(4, files.length)) {
             List<String> part = new ArrayList<>();
             part.add(files[i]);
-            part.add(files[i+1]);
-            part.add(files[i+2]);
-            part.add(files[i+3]);
+            part.add(files[i + 1]);
+            part.add(files[i + 2]);
+            part.add(files[i + 3]);
 
-            for(int j=0;j<part.size();j++){
+            for (int j = 0; j < part.size(); j++) {
 
                 int finalJ = j;
-                Thread t=new Thread(()->{
-                    String fileName=part.get(finalJ);
-                    String destinationName=newPath+"/"+fileName;
+                Thread t = new Thread(() -> {
+                    String fileName = part.get(finalJ);
+                    String destinationName = newPath + "/" + fileName;
 
-                    try{
-                        Files.copy(Path.of(fileFrom+"/"+fileName), Path.of(destinationName));
-                        System.out.println("Файл "+fileName+" успешно скопирован.");
+                    try {
+                        Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
+                        System.out.println("Файл " + fileName + " успешно скопирован.");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -69,7 +69,31 @@ public class Main {
 //        }
     }
 
-    public static void deleteFile(String []files,String newPath){
+    public static void deleteFile(String[] files, String newPath) {
+
+        for (int i = 0; i < files.length - 4; i += Math.min(4, files.length)) {
+            List<String> part = new ArrayList<>();
+            part.add(files[i]);
+            part.add(files[i + 1]);
+            part.add(files[i + 2]);
+            part.add(files[i + 3]);
+
+            for (int j = 0; j < part.size(); j++) {
+
+                int finalJ = j;
+                Thread t = new Thread(() -> {
+                    String fileName = part.get(finalJ);
+                    String destinationName = newPath + "/" + fileName;
+
+                    try {
+                        Files.delete(Path.of(destinationName));
+                        System.out.println("Файл " + fileName + " успешно удален.");
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
+                });
+                t.run();
+            }
 //        for(String file:files){
 //
 //            String fileName=new File(file).getName();
@@ -82,5 +106,6 @@ public class Main {
 //                System.out.println(e.getMessage());
 //            }
 //        }
+        }
     }
 }
