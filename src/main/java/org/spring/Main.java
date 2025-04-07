@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,32 +30,57 @@ public class Main {
     }
 
     public static void moveFile(String fileFrom,String [] files,String newPath){
-        for(String file:files){
 
-            String fileName=new File(file).getName();
-            String destinationName=newPath+"/"+fileName;
+        for(int i=0;i<files.length-4;i+=Math.min(4,files.length)) {
+            List<String> part = new ArrayList<>();
+            part.add(files[i]);
+            part.add(files[i+1]);
+            part.add(files[i+2]);
+            part.add(files[i+3]);
 
-            try{
-                Files.copy(Path.of(fileFrom+"/"+file), Path.of(destinationName));
-                System.out.println("Файл "+fileName+" успешно скопирован.");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            for(int j=0;j<part.size();j++){
+
+                int finalJ = j;
+                Thread t=new Thread(()->{
+                    String fileName=part.get(finalJ);
+                    String destinationName=newPath+"/"+fileName;
+
+                    try{
+                        Files.copy(Path.of(fileFrom+"/"+fileName), Path.of(destinationName));
+                        System.out.println("Файл "+fileName+" успешно скопирован.");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                t.run();
             }
         }
+//        for(String file:files){
+//
+//            String fileName=new File(file).getName();
+//            String destinationName=newPath+"/"+fileName;
+//
+//            try{
+//                Files.copy(Path.of(fileFrom+"/"+file), Path.of(destinationName));
+//                System.out.println("Файл "+fileName+" успешно скопирован.");
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
     }
 
     public static void deleteFile(String []files,String newPath){
-        for(String file:files){
-
-            String fileName=new File(file).getName();
-            String destinationPath=newPath+"/"+fileName;
-
-            try{
-                Files.delete(Path.of(destinationPath));
-                System.out.println("Файл "+fileName+" успешно удален.");
-            } catch (IOException e){
-                System.out.println(e.getMessage());
-            }
-        }
+//        for(String file:files){
+//
+//            String fileName=new File(file).getName();
+//            String destinationPath=newPath+"/"+fileName;
+//
+//            try{
+//                Files.delete(Path.of(destinationPath));
+//                System.out.println("Файл "+fileName+" успешно удален.");
+//            } catch (IOException e){
+//                System.out.println(e.getMessage());
+//            }
+//        }
     }
 }
