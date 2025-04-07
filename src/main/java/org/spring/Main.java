@@ -32,7 +32,7 @@ public class Main {
 
     public static void moveFile(String fileFrom, String[] files, String newPath) throws InterruptedException {
 
-        for (int i = 0; i < files.length; i += Math.min(4, files.length)) {
+        for (int i = 0; i < files.length; i += Math.min(4, files.length-i)) {
 
 //            List<String> part = new ArrayList<>();
 //            part.add(files[i]);
