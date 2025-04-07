@@ -52,7 +52,7 @@ public class Main {
                         throw new RuntimeException(e);
                     }
                 });
-                t.run();
+                t.start();
             }
         }
 //        for(String file:files){
@@ -92,7 +92,7 @@ public class Main {
                         System.out.println(e.getMessage());
                     }
                 });
-                t.run();
+                t.start();
             }
 //        for(String file:files){
 //
