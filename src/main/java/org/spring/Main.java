@@ -6,11 +6,12 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         long startTime = System.currentTimeMillis();
         System.out.println("Hello world!");
@@ -22,90 +23,135 @@ public class Main {
         String[] strFiles = filePath.list();
 
         moveFile(from, strFiles, to);
-        deleteFile(strFiles, to);
+        //deleteFile(strFiles, to);
 
         long endTime = System.currentTimeMillis();
         long timeElapsed = endTime - startTime;
         System.out.println("Затраченное время = " + timeElapsed);
     }
 
-    public static void moveFile(String fileFrom, String[] files, String newPath) {
+    public static void moveFile(String fileFrom, String[] files, String newPath) throws InterruptedException {
 
-        for (int i = 0; i < files.length - 4; i += Math.min(4, files.length)) {
-            List<String> part = new ArrayList<>();
-            part.add(files[i]);
-            part.add(files[i + 1]);
-            part.add(files[i + 2]);
-            part.add(files[i + 3]);
+        for (int i = 0; i < files.length; i += Math.min(4, files.length)) {
 
-            for (int j = 0; j < part.size(); j++) {
+//            List<String> part = new ArrayList<>();
+//            part.add(files[i]);
+//            part.add(files[i + 1]);
+//            part.add(files[i + 2]);
+//            part.add(files[i + 3]);
+
+            String[] part=new String[Math.min(4, files.length)];
+            for(int t=0;t<part.length;t++){
+
+                part[t]=files[i+t];
+            }
+
+            for (int j = 0; j < part.length; j++) {
 
                 int finalJ = j;
-                Thread t = new Thread(() -> {
-                    String fileName = part.get(finalJ);
-                    String destinationName = newPath + "/" + fileName;
+                Runnable task = ()->{
+                        String fileName = part[finalJ];
+                        String destinationName = newPath + "/" + fileName;
 
-                    try {
-                        Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
-                        System.out.println("Файл " + fileName + " успешно скопирован.");
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                t.start();
+                        try {
+                            Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
+                            System.out.println("Файл " + fileName + " успешно скопирован.");
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    };
+
+                Thread thread1=new Thread(task);
+                thread1.start();
+
+//                Thread t = new Thread(() -> {
+//                    String fileName = part.get(finalJ);
+//                    String destinationName = newPath + "/" + fileName;
+//
+//                    try {
+//                        Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
+//                        System.out.println("Файл " + fileName + " успешно скопирован.");
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                });
+//                t.start();
             }
         }
-//        for(String file:files){
+
+
+
+//        for (int i = 0; i < files.length - 4; i += Math.min(4, files.length)) {
+//            List<String> part = new ArrayList<>();
+//            part.add(files[i]);
+//            part.add(files[i + 1]);
+//            part.add(files[i + 2]);
+//            part.add(files[i + 3]);
 //
-//            String fileName=new File(file).getName();
-//            String destinationName=newPath+"/"+fileName;
+//            for (int j = 0; j < part.size(); j++) {
 //
-//            try{
-//                Files.copy(Path.of(fileFrom+"/"+file), Path.of(destinationName));
-//                System.out.println("Файл "+fileName+" успешно скопирован.");
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
+//                int finalJ = j;
+//                Thread t = new Thread(() -> {
+//                    String fileName = part.get(finalJ);
+//                    String destinationName = newPath + "/" + fileName;
+//
+//                    try {
+//                        Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
+//                        System.out.println("Файл " + fileName + " успешно скопирован.");
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                });
+//                t.start();
 //            }
-//        }
     }
 
-    public static void deleteFile(String[] files, String newPath) {
+    public static void deleteFile(String[] files, String newPath) throws InterruptedException {
 
         for (int i = 0; i < files.length - 4; i += Math.min(4, files.length)) {
-            List<String> part = new ArrayList<>();
-            part.add(files[i]);
-            part.add(files[i + 1]);
-            part.add(files[i + 2]);
-            part.add(files[i + 3]);
+//            List<String> part = new ArrayList<>();
+//            part.add(files[i]);
+//            part.add(files[i + 1]);
+//            part.add(files[i + 2]);
+//            part.add(files[i + 3]);
 
-            for (int j = 0; j < part.size(); j++) {
+            String[] part=new String[Math.min(4, files.length)];
+            for(int t=0;t<part.length;t++){
+
+                part[t]=files[i+t];
+            }
+
+            for (int j = 0; j < part.length; j++) {
 
                 int finalJ = j;
-                Thread t = new Thread(() -> {
-                    String fileName = part.get(finalJ);
+                Runnable task=()->{
+                        String fileName = part[finalJ];
                     String destinationName = newPath + "/" + fileName;
 
-                    try {
-                        Files.delete(Path.of(destinationName));
-                        System.out.println("Файл " + fileName + " успешно удален.");
-                    } catch (IOException e) {
-                        System.out.println(e.getMessage());
-                    }
-                });
-                t.start();
+                        try {
+                            Files.delete(Path.of(destinationName));
+                            System.out.println("Файл " + fileName + " успешно удален.");
+                        } catch (IOException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    };
+
+                Thread thread1=new Thread(task);
+                thread1.start();
+
+//                Thread t = new Thread(() -> {
+//                    String fileName = part.get(finalJ);
+//                    String destinationName = newPath + "/" + fileName;
+//
+//                    try {
+//                        Files.delete(Path.of(destinationName));
+//                        System.out.println("Файл " + fileName + " успешно удален.");
+//                    } catch (IOException e) {
+//                        System.out.println(e.getMessage());
+//                    }
+//                });
+//                t.start();
             }
-//        for(String file:files){
-//
-//            String fileName=new File(file).getName();
-//            String destinationPath=newPath+"/"+fileName;
-//
-//            try{
-//                Files.delete(Path.of(destinationPath));
-//                System.out.println("Файл "+fileName+" успешно удален.");
-//            } catch (IOException e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
         }
     }
 }
