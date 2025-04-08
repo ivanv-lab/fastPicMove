@@ -32,63 +32,54 @@ public class Main {
 
     public static void moveFile(String fileFrom, String[] files, String newPath) throws InterruptedException {
 
-        for (int i = 0; i < files.length; i += Math.min(4, files.length-i-1)) {
+        List<Thread> threads = new ArrayList<>();
 
-            String[] part=new String[Math.min(4, files.length)];
-            for(int t=0;t<part.length;t++){
+        for (String file : files) {
+            Runnable task = () -> {
+                String fileName = fileFrom + "/" + file;
+                String destinationName = newPath + "/" + file;
 
-                part[t]=files[i+t];
-            }
+                try {
+                    Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
+                    System.out.println("Файл " + fileName + " успешно скопирован.");
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            };
 
-            for (int j = 0; j < part.length; j++) {
-
-                int finalJ = j;
-                Runnable task = ()->{
-                        String fileName = part[finalJ];
-                        String destinationName = newPath + "/" + fileName;
-
-                        try {
-                            Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
-                            System.out.println("Файл " + fileName + " успешно скопирован.");
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    };
-
-                Thread thread1=new Thread(task);
-                thread1.start();
-            }
+            Thread thread=new Thread(task);
+            threads.add(thread);
+            thread.start();
         }
+
+        for(Thread thread:threads){
+            thread.join();
+        }
+//        Runnable task = () -> {
+//            String fileName = part[finalJ];
+//            String destinationName = newPath + "/" + fileName;
+//
+//            try {
+//                Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
+//                System.out.println("Файл " + fileName + " успешно скопирован.");
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        };
     }
 
     public static void deleteFile(String[] files, String newPath) throws InterruptedException {
 
-        for (int i = 0; i < files.length - 4; i += Math.min(4, files.length)) {
-
-            String[] part=new String[Math.min(4, files.length)];
-            for(int t=0;t<part.length;t++){
-
-                part[t]=files[i+t];
-            }
-
-            for (int j = 0; j < part.length; j++) {
-
-                int finalJ = j;
-                Runnable task=()->{
-                        String fileName = part[finalJ];
-                    String destinationName = newPath + "/" + fileName;
-
-                        try {
-                            Files.delete(Path.of(destinationName));
-                            System.out.println("Файл " + fileName + " успешно удален.");
-                        } catch (IOException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    };
-
-                Thread thread1=new Thread(task);
-                thread1.start();
-            }
-        }
+//        Runnable task = () -> {
+//            String fileName = part[finalJ];
+//            String destinationName = newPath + "/" + fileName;
+//
+//            try {
+//                Files.delete(Path.of(destinationName));
+//                System.out.println("Файл " + fileName + " успешно удален.");
+//            } catch (IOException e) {
+//                System.out.println(e.getMessage());
+//            }
+//        };
     }
 }
