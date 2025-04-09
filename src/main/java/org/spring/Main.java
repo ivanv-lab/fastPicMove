@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 public class Main {
+    private static final int CORE_COUNT=4;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -23,7 +24,7 @@ public class Main {
         String[] strFiles = filePath.list();
 
         moveFile(from, strFiles, to);
-        //deleteFile(strFiles, to);
+        deleteFile(strFiles, to);
 
         long endTime = System.currentTimeMillis();
         long timeElapsed = endTime - startTime;
@@ -33,16 +34,45 @@ public class Main {
     public static void moveFile(String fileFrom, String[] files, String newPath) throws InterruptedException {
 
         List<Thread> threads = new ArrayList<>();
+        List<List<String>> fileGroups=partition(files,CORE_COUNT);
 
-        for (String file : files) {
+        for (List<String> fileGroup:fileGroups) {
             Runnable task = () -> {
-                String fileName = fileFrom + "/" + file;
-                String destinationName = newPath + "/" + file;
+                for(String file:fileGroup) {
+                    String fileName = fileFrom + "/" + file;
+                    String destinationName = newPath + "/" + file;
 
-                try {
-                    Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
-                    System.out.println("Файл " + fileName + " успешно скопирован.");
-                } catch (IOException e) {
+                    try {
+                        Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
+                        System.out.println("Файл " + fileName + " успешно скопирован.");
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            };
+
+            Thread thread=new Thread(task);
+            threads.add(thread);
+            thread.start();
+        }
+
+        for(Thread thread:threads){
+            thread.join();
+        }
+    }
+
+    public static void deleteFile(String[] files, String newPath) throws InterruptedException {
+
+        List<Thread> threads=new ArrayList<>();
+
+        for(String file:files){
+            Runnable task=()->{
+                String destinationName=newPath+"/"+file;
+
+                try{
+                    Files.delete(Path.of(destinationName));
+                    System.out.println("Файл "+destinationName+" успешно удален.");
+                } catch (IOException e){
                     System.out.println(e.getMessage());
                 }
             };
@@ -55,31 +85,16 @@ public class Main {
         for(Thread thread:threads){
             thread.join();
         }
-//        Runnable task = () -> {
-//            String fileName = part[finalJ];
-//            String destinationName = newPath + "/" + fileName;
-//
-//            try {
-//                Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
-//                System.out.println("Файл " + fileName + " успешно скопирован.");
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        };
     }
 
-    public static void deleteFile(String[] files, String newPath) throws InterruptedException {
+    public static <T> List<List<T>> partition(T[] list, int partitionSize){
 
-//        Runnable task = () -> {
-//            String fileName = part[finalJ];
-//            String destinationName = newPath + "/" + fileName;
-//
-//            try {
-//                Files.delete(Path.of(destinationName));
-//                System.out.println("Файл " + fileName + " успешно удален.");
-//            } catch (IOException e) {
-//                System.out.println(e.getMessage());
-//            }
-//        };
+        List<List<T>> partitions=new ArrayList<>();
+        for(int i=0;i< list.length;i+=partitionSize){
+
+            int end=Math.min(list.length, i+partitionSize);
+            partitions.add(new ArrayList<>(List.of(list).subList(i, end)));
+        }
+        return partitions;
     }
 }
