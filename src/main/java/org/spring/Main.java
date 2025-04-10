@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 public class Main {
-    private static final int CORE_COUNT=4;
+    private static final int CORE_COUNT=10;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -43,7 +43,7 @@ public class Main {
                     String destinationName = newPath + "/" + file;
 
                     try {
-                        Files.copy(Path.of(fileFrom + "/" + fileName), Path.of(destinationName));
+                        Files.copy(Path.of(fileName), Path.of(destinationName));
                         System.out.println("Файл " + fileName + " успешно скопирован.");
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
