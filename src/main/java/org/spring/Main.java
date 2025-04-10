@@ -10,9 +10,9 @@ import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 public class Main {
-    private static final int CORE_COUNT=10;
+    private static final int CORE_COUNT=6;
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws  InterruptedException {
 
         long startTime = System.currentTimeMillis();
         System.out.println("Hello world!");
